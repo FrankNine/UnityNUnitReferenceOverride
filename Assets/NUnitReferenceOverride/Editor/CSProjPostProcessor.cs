@@ -7,7 +7,7 @@ using UnityEditor;
 
 public class SolutionPostProcessor : AssetPostprocessor
 {
-	private const string CSPROJ_FILENAME = "Assembly-CSharp-Editor.csproj";
+	private const string CSPROJ_DEFAULT_FILENAME = "Assembly-CSharp-Editor.csproj";
 	private const string CSPROJ_SCHEMA = "http://schemas.microsoft.com/developer/msbuild/2003";
 	
 	private static void OnGeneratedCSProjectFiles()
@@ -25,9 +25,9 @@ public class SolutionPostProcessor : AssetPostprocessor
 		XNamespace ns = CSPROJ_SCHEMA; 
 		
 		string projectRootPath = Directory.GetParent(Application.dataPath).FullName;
-		string csprojPath = Path.Combine(projectRootPath, CSPROJ_FILENAME);
+		string editorCSProjPath = _GetEditorCSProjPath(projectRootPath);
 
-		var csprojDocument = XDocument.Load(csprojPath);
+		var csprojDocument = XDocument.Load(editorCSProjPath);
 		var referenceNodes = csprojDocument.Root.Descendants(ns + "Reference").ToArray();
 		var nunitReferenceNodeArray = referenceNodes.Where(_IsNUnitReference).ToArray();
 		if (nunitReferenceNodeArray.Length == 0)
@@ -40,10 +40,21 @@ public class SolutionPostProcessor : AssetPostprocessor
 		var nunitHintPathNode = nunitReferenceNode.Element(ns + "HintPath");
 		nunitHintPathNode.Value = NUnitPreferenceItem.OverridingNUnitPath;
 		
-		csprojDocument.Save(csprojPath);
+		csprojDocument.Save(editorCSProjPath);
 	}
-	
-	private static bool _IsNUnitReference(XElement element)
+
+    private static string _GetEditorCSProjPath(string projectRootPath)
+    {
+#if UNITY_EDITOR_WIN
+        string projectName = Path.GetFileName(projectRootPath);
+        string editorCSProjFilename = string.Format("{0}.Editor.csproj", projectName);
+        return Path.Combine(projectRootPath, editorCSProjFilename);
+#else
+        return Path.Combine(projectRootPath, CSPROJ_DEFAULT_FILENAME);
+#endif
+    }
+
+    private static bool _IsNUnitReference(XElement element)
 	{
 		XAttribute includeAttribute = element.Attribute("Include");
 		return includeAttribute != null && includeAttribute.Value == "nunit.framework";
