@@ -8,18 +8,26 @@ using UnityEditor;
 public class SolutionPostProcessor : AssetPostprocessor
 {
 	private const string CSPROJ_FILENAME = "Assembly-CSharp-Editor.csproj";
+	private const string CSPROJ_SCHEMA = "http://schemas.microsoft.com/developer/msbuild/2003";
 	
 	private static void OnGeneratedCSProjectFiles()
 	{
-		if (!NUnitPreferenceItem.IsOverridingNUnitReference){return;}
+#if UNITY_5_6_OR_NEWER
+		if (!NUnitPreferenceItem.IsOverridingNUnitReference) { return; }
+		_OverrideNUnitReference();
+#endif
+	}
+
+	private static void _OverrideNUnitReference()
+	{
 		Debug.Log("Patching .csproj for overriding NUnit reference...");
 		
-		XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+		XNamespace ns = CSPROJ_SCHEMA; 
 		
 		string projectRootPath = Directory.GetParent(Application.dataPath).FullName;
 		string csprojPath = Path.Combine(projectRootPath, CSPROJ_FILENAME);
 
-		XDocument csprojDocument = XDocument.Load(csprojPath);
+		var csprojDocument = XDocument.Load(csprojPath);
 		var referenceNodes = csprojDocument.Root.Descendants(ns + "Reference").ToArray();
 		var nunitReferenceNodeArray = referenceNodes.Where(_IsNUnitReference).ToArray();
 		if (nunitReferenceNodeArray.Length == 0)

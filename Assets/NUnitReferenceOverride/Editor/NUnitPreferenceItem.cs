@@ -25,6 +25,15 @@ public class NUnitPreferenceItem {
 	[PreferenceItem("NUnit Override")]
 	private static void PreferencesGUI()
 	{
+#if UNITY_5_6_OR_NEWER
+		_ShowNUnitOverrideOptions();
+#else
+		_ShowOverrideNotRequried();
+#endif
+	}
+
+	private static void _ShowNUnitOverrideOptions()
+	{
 		if (!_isPrefsLoaded)
 		{
 			_isOverridingNUnitReference = IsOverridingNUnitReference;
@@ -34,7 +43,7 @@ public class NUnitPreferenceItem {
 		}
 
 		_isOverridingNUnitReference = EditorGUILayout.Toggle("Is Overriding .csproj NUnit reference", 
-															 _isOverridingNUnitReference);
+			_isOverridingNUnitReference);
 		GUI.enabled = _isOverridingNUnitReference;
 		_overridingNUnitPath = EditorGUILayout.TextField(_overridingNUnitPath);
 		GUI.enabled = true;
@@ -44,5 +53,10 @@ public class NUnitPreferenceItem {
 			EditorPrefs.SetBool(IsOverridingNUnitReferenceEditorPrefsKey, _isOverridingNUnitReference);
 			EditorPrefs.SetString(OverridingNUnitPathEditorPrefsKey, _overridingNUnitPath);
 		}
+	}
+
+	private static void _ShowOverrideNotRequried()
+	{
+		EditorGUILayout.LabelField("This version of Unity is using NUnit 2. Overriding is not required.");
 	}
 }
