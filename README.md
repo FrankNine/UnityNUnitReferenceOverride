@@ -1,8 +1,11 @@
 # Unity NUnit Reference Override
 
-This tool is for running unit tests in IDE such as Visual Studio with Resharper or Rider after Unity 5.6. 
+This tool is for running unit tests in IDE such as Visual Studio with Resharper or pre-2017.3 Rider after Unity 5.6. 
 
 Before Unity 5.6, Unity includes NUnit framework 2.6.4.0 which can be tested by NUnit 2 test runner without any problem. After 5.6, Unity switched to a modified 3.5 NUnit framework and cannot work with standard NUnit 3 test runner. This tool modifies Unity generated CSharp  editor project and override nunit.framework path hint to custom location. You can point the reference to standard NUnit 3.5 dll and test runner shall work again.
+
+**Starting from Rider 2017.3, the built-in Rider plugin for Unity handle this for you. You don't need this tool if your are using Rider 2017.3 and later**  
+The pull request of the official fix is [here](https://github.com/JetBrains/resharper-unity/pull/256/files)
 
 ## How to use
 * Copy editor scripts under Assets/NUnitReferenceOverride to your project
