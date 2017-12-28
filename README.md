@@ -14,3 +14,12 @@ Before Unity 5.6, Unity includes NUnit framework 2.6.4.0 which can be tested by 
 ## Tested Environment 
 * Unity 5.6, Unity 2017.3.0 on Windows 10 with ReSharper 2017.3
 * Unity 5.6, Unity 2017.3.0 on OSX 12.6 with Rider 2017.2
+
+## Troubleshooting
+If you are seeing this after opening a Unity generated project:
+![.Net target not found](Extras/project_target_not_installed.png?raw=true "TargetNotFound")
+
+Do not change target and force open the project since it would lose all of its references and cannot build to run the tests. Try install corresponding .NET SDKs for Visual Studio form [here](https://www.microsoft.com/net/download/visual-studio-sdks)
+
+* For missing .Net 3.5 target, install ".NET Framework 3.5 SP1 runtime"
+* For missing .Net 4.6 target (Unity 2017 experimental scripting runtime), install ".NET Framework 4.6 Developer Pack" (Although the download page stated it is included in Visual Studio 2017, but it is actually not)
