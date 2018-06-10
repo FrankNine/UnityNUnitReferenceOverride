@@ -15,7 +15,7 @@ namespace NUnitReferenceOverride
 
         private static void OnGeneratedCSProjectFiles()
         {
-#if UNITY_5_6_OR_NEWER && UNITY_EDITOR_WIN
+#if UNITY_5_6_OR_NEWER
             if (!NUnitPreferenceItem.IsOverridingNUnitReference)
             {
                 return;
@@ -72,6 +72,7 @@ namespace NUnitReferenceOverride
                 }
             }
 
+#if UNITY_EDITOR_WIN
             {
                 string vstuEditorCSProjPath = _GetVSTUEditorCSProjPath(projectRootPath);
                 if (File.Exists(vstuEditorCSProjPath))
@@ -85,6 +86,7 @@ namespace NUnitReferenceOverride
                         vstuEditorCSProjPath);
                 }
             }
+#endif
 
             {
                 string defaultEditorCSProjPath = Path.Combine(projectRootPath, CSPROJ_DEFAULT_FILENAME);

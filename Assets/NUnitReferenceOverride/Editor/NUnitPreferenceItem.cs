@@ -42,9 +42,7 @@ namespace NUnitReferenceOverride
         [PreferenceItem("NUnit Override")]
         private static void PreferencesGUI()
         {
-#if UNITY_EDITOR_OSX
-            _ShowOverrideNotRequiredRiderOSX();
-#elif !UNITY_5_6_OR_NEWER
+#if !UNITY_5_6_OR_NEWER
             _ShowOverrideNotRequiredNUnit2();
 #else
             _ShowNUnitOverrideOptions();
@@ -102,12 +100,6 @@ namespace NUnitReferenceOverride
         {
             EditorGUILayout.LabelField("This version of Unity is using NUnit 2.");
             EditorGUILayout.LabelField("Overriding is not required.");
-        }
-
-        private static void _ShowOverrideNotRequiredRiderOSX()
-        {
-            EditorGUILayout.LabelField("This plugin is only for Visual Studio");
-            EditorGUILayout.LabelField("for Windows with ReSharper");
         }
     }
 }
